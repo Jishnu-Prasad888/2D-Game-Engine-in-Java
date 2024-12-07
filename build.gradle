@@ -1,26 +1,30 @@
 plugins {
     id 'java'
+    id 'application'  // Apply the 'application' plugin for running the application
 }
 
-version '1.0-SNAPSHOT'
+application {
+    mainClassName = 'Main'  // For Gradle 6.x, use 'mainClassName' instead of 'mainClass'
+}
 
-sourceCompatibility = 1.11
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
 
 repositories {
     mavenCentral()
 }
 
-//dependencies {
-//    testCompile group: 'junit', name: 'junit', version: '4.12'
-//}
-
-project.ext.lwjglVersion = "3.2.3"
-project.ext.jomlVersion = "1.9.23"
-project.ext.lwjglNatives = "natives-windows"
+ext {
+    lwjglVersion = "3.2.3"
+    jomlVersion = "1.9.23"
+    lwjglNatives = "natives-windows"
+}
 
 dependencies {
+    // LWJGL dependencies (platform-specific)
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-assimp"
     implementation "org.lwjgl:lwjgl-glfw"
@@ -28,12 +32,24 @@ dependencies {
     implementation "org.lwjgl:lwjgl-openal"
     implementation "org.lwjgl:lwjgl-opengl"
     implementation "org.lwjgl:lwjgl-stb"
-    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-nfd::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+    implementation 'org.lwjgl:lwjgl:3.3.1'
+    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
+    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
+    // Runtime-only dependencies (native libraries)
+    runtimeOnly "org.lwjgl:lwjgl:$lwjglVersion:natives-windows"  // For Windows
+    runtimeOnly "org.lwjgl:lwjgl-assimp:$lwjglVersion:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-nfd:$lwjglVersion:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-openal:$lwjglVersion:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:$lwjglVersion:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-stb:$lwjglVersion:natives-windows"
+
+    // JOML (Java OpenGL Math Library)
     implementation "org.joml:joml:${jomlVersion}"
+}
+
+// Optional custom run task if you want to define it (otherwise, `gradle run` will work)
+task customRun(type: JavaExec) {
+    main = 'Main'  // Main class, adjust if necessary (full package name if applicable)
+    classpath = sourceSets.main.runtimeClasspath
 }
