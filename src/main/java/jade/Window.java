@@ -2,6 +2,7 @@ package jade;
 
 
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import util.Time;
@@ -67,10 +68,10 @@ public class Window {
 
         // Free the memory for better resource management
         glfwFreeCallbacks(glfwWindow);
-        glfwDestroyWindow(glfwWindow);
 
         // Terminate GLFW and free the error callback
-        glfwTerminate(); // This function is called to terminate GLFW. It should be called when your application is done using GLFW and is ready to clean up any resources it allocated during its lifetime.
+        glfwTerminate();
+        glfwDestroyWindow(glfwWindow); // This function is called to terminate GLFW. It should be called when your application is done using GLFW and is ready to clean up any resources it allocated during its lifetime.
         glfwSetErrorCallback(null).free(); // glfwSetErrorCallback is used to set the callback function that will be called in the event of an error. The argument passed to glfwSetErrorCallback is usually a function pointer to a custom error handler.
     }
 
@@ -143,17 +144,6 @@ public class Window {
             if (dt >= 0) {
                 CurrentScene.update(dt);
             }
-//            if(FadeToBlack) {
-//                r = Math.max(r - 0.01f, 0);
-//                g = Math.max(g - 0.01f, 0);
-//                b = Math.max(b - 0.01f, 0);
-//                a = 1;
-//            }
-//
-//            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
-//                System.out.println("Space key pressed");
-//                FadeToBlack = true;
-//            }
 
             MouseListener.endFrame();  // Reset mouse states at the end of each frame
 
@@ -168,8 +158,7 @@ public class Window {
         }
         // Free memory and terminate GLFW here
         glfwFreeCallbacks(glfwWindow);
-        glfwDestroyWindow(glfwWindow);
-
-        glfwTerminate(); // Properly terminate GLFW
+        glfwTerminate();
+        glfwDestroyWindow(glfwWindow);// Properly terminate GLFW
     }
 }
